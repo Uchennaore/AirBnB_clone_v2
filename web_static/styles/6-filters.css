@@ -21,8 +21,8 @@
 .filter_amenities {
 	display: inline;
 	vertical-align: middle;
-	height: 100%;
 	float: left;
+	height: 100%;
     width: 25%;
 
 	line-height: 20px;
