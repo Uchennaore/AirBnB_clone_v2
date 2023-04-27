@@ -20,28 +20,24 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    def delete(self, obj=None):
-        """deletes obj from __objects if it's inside
-        Args:
-            obj: given object
-        """
-        if not obj:
-            return
-        key = "{}.{}".format(type(obj).__name__, obj.id)
-        if key in self.__objects:
-            del self.__objects[key]
-            self.save()
-
     def all(self, cls=None):
-        """returns a dictionary
-        Args:
-            cls: class type to filter return by
-        Return:
-            returns a dictionary of __object
+        """Returns all the objects
+
+        If a class is specified, the method only
+        returns the objects of same type.
+
         """
-        if not cls:
-            return self.__objects
-        return {k: v for k, v in self.__objects.items() if type(v) == cls}
+
+        if cls:
+            same_type = dict()
+
+            for key, obj in self.__objects.items():
+                if obj.__class__ == cls:
+                    same_type[key] = obj
+
+            return same_type
+
+        return self.__objects
 
     def new(self, obj):
         """sets __object to given obj
@@ -72,6 +68,17 @@ class FileStorage:
         except FileNotFoundError:
             pass
 
+    def delete(self, obj=None):
+        """Delete obj from __objects if it's inside
+        """
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+
+            if self.__objects[key]:
+                del self.__objects[key]
+                self.save()
+
     def close(self):
-        """Thread specific storage"""
+        """Deserialize the JSON file to objects
+        """
         self.reload()
